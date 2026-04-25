@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Counties Explorer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181a22;
+    --surface2: #1f2230;
+    --border: #2a2d3a;
+    --text: #e2e4ea;
+    --text-dim: #8b8fa3;
+    --accent: #5eead4;
+    --accent-dim: rgba(94, 234, 212, 0.12);
+    --accent-mid: rgba(94, 234, 212, 0.25);
+    --marked: #5eead4;
+    --unmarked: #2a2d3a;
+    --unmarked-fill: #1c1f2b;
+    --hover: #3a3d50;
+    --danger: #f87171;
+    --county-stroke: #1a1c26;
+    --state-stroke: #3e4155;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover { background: var(--hover); border-color: var(--text-dim); }
+  .btn-accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .btn-accent:hover { background: var(--accent-mid); }
+  .btn-danger { color: var(--danger); border-color: rgba(248,113,113,0.3); }
+  .btn-danger:hover { background: rgba(248,113,113,0.1); }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 340px;
+    min-width: 340px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+  }
+
+  .search-wrap {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-box {
+    position: relative;
+  }
+
+  .search-box svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-box input::placeholder { color: var(--text-dim); }
+  .search-box input:focus { border-color: var(--accent); }
+
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .filter-btn:hover:not(.active) { border-color: var(--text-dim); color: var(--text); }
+
+  .county-list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .county-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.1s;
+    gap: 12px;
+    border-bottom: 1px solid rgba(42, 45, 58, 0.5);
+  }
+
+  .county-item:hover { background: var(--surface2); }
+
+  .county-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .county-item.marked .county-check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .county-check svg { opacity: 0; transition: opacity 0.1s; }
+  .county-item.marked .county-check svg { opacity: 1; }
+
+  .county-info { flex: 1; min-width: 0; }
+
+  .county-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .county-state {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+
+  .county-fips {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
+  /* ── MAP AREA ── */
+  .map-container {
+    flex: 1;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  #map-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .county-path {
+    stroke: var(--county-stroke);
+    stroke-width: 0.3;
+    cursor: pointer;
+    transition: fill 0.15s;
+  }
+
+  .county-path.unmarked { fill: var(--unmarked-fill); }
+  .county-path.marked { fill: var(--marked); fill-opacity: 0.55; }
+  .county-path:hover { fill-opacity: 0.8; stroke: var(--text-dim); stroke-width: 0.8; }
+
+  .state-border {
+    fill: none;
+    stroke: var(--state-stroke);
+    stroke-width: 0.8;
+    pointer-events: none;
+  }
+
+  .nation-border {
+    fill: none;
+    stroke: var(--state-stroke);
+    stroke-width: 1.2;
+    pointer-events: none;
+  }
+
+  /* ── TOOLTIP ── */
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.12s;
+    max-width: 250px;
+  }
+
+  .tooltip.show { opacity: 1; }
+  .tooltip-name { font-weight: 600; font-size: 14px; }
+  .tooltip-state { color: var(--text-dim); margin-top: 2px; }
+  .tooltip-status { margin-top: 6px; font-size: 12px; font-weight: 500; }
+  .tooltip-status.is-marked { color: var(--accent); }
+  .tooltip-status.is-unmarked { color: var(--text-dim); }
+
+  /* ── LOCATION SEARCH ── */
+  .loc-search {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    gap: 6px;
+    width: 420px;
+    max-width: calc(100% - 40px);
+  }
+
+  .loc-search input {
+    flex: 1;
+    padding: 10px 14px 10px 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .loc-search input::placeholder { color: var(--text-dim); }
+  .loc-search input:focus { border-color: var(--accent); }
+
+  .loc-search .loc-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+
+  .loc-search-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .loc-search-btn:hover { background: var(--accent-mid); }
+  .loc-search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .loc-result {
+    position: absolute;
+    top: 58px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: none;
+    max-width: 420px;
+    width: max-content;
+    animation: fadeSlideIn 0.2s ease;
+  }
+
+  .loc-result.show { display: flex; align-items: center; gap: 12px; }
+  .loc-result.error { border-color: rgba(248,113,113,0.4); }
+
+  .loc-result-text { flex: 1; }
+  .loc-result-name { font-weight: 600; }
+  .loc-result-detail { color: var(--text-dim); margin-top: 2px; font-size: 12px; }
+
+  .loc-result-actions { display: flex; gap: 6px; }
+
+  .loc-mark-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .loc-mark-btn:hover { background: var(--accent-mid); }
+
+  .loc-close-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .loc-close-btn:hover { background: var(--surface2); }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  @keyframes countyFlash {
+    0%, 100% { fill-opacity: 0.55; }
+    25% { fill-opacity: 1; }
+    50% { fill-opacity: 0.3; }
+    75% { fill-opacity: 1; }
+  }
+
+  .county-path.flash {
+    animation: countyFlash 1s ease 2;
+    stroke: var(--accent) !important;
+    stroke-width: 2 !important;
+  }
+
+  /* ── ZOOM CONTROLS ── */
+  .zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .zoom-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.15s;
+  }
+
+  .zoom-btn:hover { background: var(--hover); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    z-index: 200;
+  }
+
+  .loading-text {
+    font-size: 15px;
+    color: var(--text-dim);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* Hidden file input */
+  #csv-import { display: none; }
+
+  /* ── SCROLLBAR ── */
+  .county-list::-webkit-scrollbar { width: 6px; }
+  .county-list::-webkit-scrollbar-track { background: transparent; }
+  .county-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .list-count {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    US Counties Explorer
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-value" id="marked-count">0</span>
+      <span>marked</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="total-count">0</span>
+      <span>total</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="pct-count">0%</span>
+      <span>complete</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="exportCSV()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+    <button class="btn" onclick="document.getElementById('csv-import').click()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Import CSV
+    </button>
+    <input type="file" id="csv-import" accept=".csv" onchange="importCSV(event)">
+    <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
+  </div>
+</header>
+
+<div class="progress-track">
+  <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search counties or states…" oninput="filterList()">
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" data-filter="marked" onclick="setFilter('marked', this)">Marked</button>
+      <button class="filter-btn" data-filter="unmarked" onclick="setFilter('unmarked', this)">Unmarked</button>
+    </div>
+    <div class="list-count" id="list-count">Loading…</div>
+    <div class="county-list" id="county-list"></div>
+  </div>
+
+  <div class="map-container">
+    <div class="loading-overlay" id="loading">
+      <div class="loading-text">Loading county data…</div>
+    </div>
+    <div class="loc-search">
+      <svg class="loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" id="loc-input" placeholder="Search by city, address, or place…" onkeydown="if(event.key==='Enter')searchLocation()">
+      <button class="loc-search-btn" id="loc-btn" onclick="searchLocation()">Find County</button>
+    </div>
+    <div class="loc-result" id="loc-result"></div>
+    <svg id="map-svg"></svg>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomIn()">+</button>
+      <button class="zoom-btn" onclick="zoomOut()">−</button>
+      <button class="zoom-btn" onclick="resetZoom()" style="font-size:12px">⟲</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let counties = [];       // {id, name, state, fips, marked}
+let countyMap = {};       // fips -> county
+let countyGeoFeatures = []; // GeoJSON features for point-in-polygon
+let currentFilter = 'all';
+let us = null;
+let svg, g, path, projection, zoom;
+const STORAGE_KEY = 'us-counties-marked';
+
+// ── FIPS to State Name ──
+const stateNames = {
+  "01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas","06":"California",
+  "08":"Colorado","09":"Connecticut","10":"Delaware","11":"District of Columbia",
+  "12":"Florida","13":"Georgia","15":"Hawaii","16":"Idaho","17":"Illinois",
+  "18":"Indiana","19":"Iowa","20":"Kansas","21":"Kentucky","22":"Louisiana",
+  "23":"Maine","24":"Maryland","25":"Massachusetts","26":"Michigan","27":"Minnesota",
+  "28":"Mississippi","29":"Missouri","30":"Montana","31":"Nebraska","32":"Nevada",
+  "33":"New Hampshire","34":"New Jersey","35":"New Mexico","36":"New York",
+  "37":"North Carolina","38":"North Dakota","39":"Ohio","40":"Oklahoma",
+  "41":"Oregon","42":"Pennsylvania","44":"Rhode Island","45":"South Carolina",
+  "46":"South Dakota","47":"Tennessee","48":"Texas","49":"Utah","50":"Vermont",
+  "51":"Virginia","53":"Washington","54":"West Virginia","55":"Wisconsin",
+  "56":"Wyoming","60":"American Samoa","66":"Guam","69":"Northern Mariana Islands",
+  "72":"Puerto Rico","78":"U.S. Virgin Islands"
+};
+
+// ── INIT ──
+async function init() {
+  try {
+    us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json");
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<div class="loading-text" style="color:var(--danger)">Failed to load map data. Please refresh.</div>';
+    return;
+  }
+
+  // Build county list from topojson
+  const countyFeatures = topojson.feature(us, us.objects.counties).features;
+  countyGeoFeatures = countyFeatures;
+  counties = countyFeatures.map(f => {
+    const fips = f.id;
+    const stateFips = fips.substring(0, 2);
+    const name = f.properties.name || `County ${fips}`;
+    return {
+      id: fips,
+      fips: fips,
+      name: name,
+      state: stateNames[stateFips] || `State ${stateFips}`,
+      stateFips: stateFips,
+      marked: false
+    };
+  }).filter(c => c.state !== undefined);
+
+  counties.sort((a, b) => a.name.localeCompare(b.name) || a.state.localeCompare(b.state));
+
+  counties.forEach(c => { countyMap[c.fips] = c; });
+
+  // Load saved
+  loadSaved();
+
+  // Render
+  renderMap();
+  renderList();
+  updateStats();
+
+  document.getElementById('loading').style.display = 'none';
+}
+
+function loadSaved() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const markedIds = JSON.parse(saved);
+      markedIds.forEach(id => {
+        if (countyMap[id]) countyMap[id].marked = true;
+      });
+    }
+  } catch(e) {}
+}
+
+function saveToDisk() {
+  const markedIds = counties.filter(c => c.marked).map(c => c.fips);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(markedIds));
+}
+
+// ── MAP ──
+function renderMap() {
+  const container = document.querySelector('.map-container');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  svg = d3.select('#map-svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  projection = d3.geoAlbersUsa()
+    .fitSize([width - 40, height - 40], topojson.feature(us, us.objects.nation))
+    .translate([width / 2, height / 2]);
+
+  path = d3.geoPath().projection(projection);
+
+  g = svg.append('g');
+
+  // Counties
+  g.selectAll('.county-path')
+    .data(topojson.feature(us, us.objects.counties).features)
+    .enter().append('path')
+    .attr('class', d => `county-path ${countyMap[d.id]?.marked ? 'marked' : 'unmarked'}`)
+    .attr('d', path)
+    .attr('data-fips', d => d.id)
+    .on('click', function(event, d) {
+      toggleCounty(d.id);
+    })
+    .on('mouseenter', function(event, d) {
+      showTooltip(event, d.id);
+    })
+    .on('mousemove', function(event) {
+      moveTooltip(event);
+    })
+    .on('mouseleave', hideTooltip);
+
+  // State borders
+  g.append('path')
+    .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+    .attr('class', 'state-border')
+    .attr('d', path);
+
+  // Nation border
+  g.append('path')
+    .datum(topojson.mesh(us, us.objects.nation))
+    .attr('class', 'nation-border')
+    .attr('d', path);
+
+  // Zoom
+  zoom = d3.zoom()
+    .scaleExtent([1, 20])
+    .on('zoom', (event) => {
+      g.attr('transform', event.transform);
+    });
+
+  svg.call(zoom);
+}
+
+function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.5); }
+function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.67); }
+function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); }
+
+// ── TOOLTIP ──
+function showTooltip(event, fips) {
+  const c = countyMap[fips];
+  if (!c) return;
+  const tip = document.getElementById('tooltip');
+  tip.innerHTML = `
+    <div class="tooltip-name">${c.name}</div>
+    <div class="tooltip-state">${c.state} · FIPS ${c.fips}</div>
+    <div class="tooltip-status ${c.marked ? 'is-marked' : 'is-unmarked'}">
+      ${c.marked ? '✓ Marked' : '○ Not marked'} · Click to toggle
+    </div>
+  `;
+  tip.classList.add('show');
+  moveTooltip(event);
+}
+
+function moveTooltip(event) {
+  const tip = document.getElementById('tooltip');
+  const rect = document.querySelector('.map-container').getBoundingClientRect();
+  let x = event.clientX - rect.left + 14;
+  let y = event.clientY - rect.top - 10;
+  if (x + 200 > rect.width) x = x - 230;
+  if (y + 80 > rect.height) y = y - 80;
+  tip.style.left = x + 'px';
+  tip.style.top = y + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').classList.remove('show');
+}
+
+// ── TOGGLE ──
+function toggleCounty(fips) {
+  const c = countyMap[fips];
+  if (!c) return;
+  c.marked = !c.marked;
+
+  // Update map
+  d3.select(`.county-path[data-fips="${fips}"]`)
+    .classed('marked', c.marked)
+    .classed('unmarked', !c.marked);
+
+  // Update list item if visible
+  const el = document.querySelector(`.county-item[data-fips="${fips}"]`);
+  if (el) {
+    el.classList.toggle('marked', c.marked);
+    // If filter is active, may need to hide/show
+    if (currentFilter === 'marked' && !c.marked) el.style.display = 'none';
+    if (currentFilter === 'unmarked' && c.marked) el.style.display = 'none';
+  }
+
+  saveToDisk();
+  updateStats();
+}
+
+// ── LIST ──
+function renderList() {
+  const list = document.getElementById('county-list');
+  const search = document.getElementById('search-input').value.toLowerCase();
+
+  let filtered = counties;
+  if (currentFilter === 'marked') filtered = filtered.filter(c => c.marked);
+  if (currentFilter === 'unmarked') filtered = filtered.filter(c => !c.marked);
+  if (search) {
+    filtered = filtered.filter(c =>
+      c.name.toLowerCase().includes(search) ||
+      c.state.toLowerCase().includes(search) ||
+      c.fips.includes(search)
+    );
+  }
+
+  document.getElementById('list-count').textContent = `${filtered.length} counties shown`;
+
+  // Virtual-ish rendering: cap at 500 for perf, show message if more
+  const toShow = filtered.slice(0, 500);
+
+  list.innerHTML = toShow.map(c => `
+    <div class="county-item ${c.marked ? 'marked' : ''}" data-fips="${c.fips}" onclick="toggleCounty('${c.fips}')">
+      <div class="county-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f1117" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="county-info">
+        <div class="county-name">${c.name}</div>
+        <div class="county-state">${c.state}</div>
+      </div>
+      <div class="county-fips">${c.fips}</div>
+    </div>
+  `).join('') + (filtered.length > 500 ? `<div style="padding:16px;text-align:center;color:var(--text-dim);font-size:13px">${filtered.length - 500} more — refine your search</div>` : '');
+}
+
+function filterList() { renderList(); }
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+// ── STATS ──
+function updateStats() {
+  const total = counties.length;
+  const marked = counties.filter(c => c.marked).length;
+  const pct = total ? Math.round(marked / total * 100) : 0;
+  document.getElementById('marked-count').textContent = marked;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('pct-count').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ── CSV EXPORT ──
+function exportCSV() {
+  const marked = counties.filter(c => c.marked);
+  if (marked.length === 0) {
+    alert('No counties marked yet!');
+    return;
+  }
+  const rows = [['FIPS', 'County', 'State']];
+  marked.forEach(c => {
+    rows.push([c.fips, `"${c.name}"`, `"${c.state}"`]);
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `marked-counties-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── CSV IMPORT ──
+function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    const lines = text.trim().split('\n');
+    let importedCount = 0;
+
+    // Skip header if present
+    const start = lines[0].toLowerCase().includes('fips') ? 1 : 0;
+
+    for (let i = start; i < lines.length; i++) {
+      const parts = lines[i].split(',');
+      const fips = parts[0]?.trim().replace(/"/g, '');
+      if (fips && countyMap[fips]) {
+        if (!countyMap[fips].marked) {
+          countyMap[fips].marked = true;
+          importedCount++;
+        }
+      }
+    }
+
+    // Update everything
+    d3.selectAll('.county-path').each(function(d) {
+      const el = d3.select(this);
+      const c = countyMap[d.id];
+      if (c) {
+        el.classed('marked', c.marked).classed('unmarked', !c.marked);
+      }
+    });
+
+    renderList();
+    updateStats();
+    saveToDisk();
+    alert(`Imported ${importedCount} new counties.`);
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── LOCATION SEARCH ──
+let lastFoundFips = null;
+
+async function searchLocation() {
+  const input = document.getElementById('loc-input');
+  const btn = document.getElementById('loc-btn');
+  const resultEl = document.getElementById('loc-result');
+  const query = input.value.trim();
+  if (!query) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Searching…';
+  resultEl.className = 'loc-result';
+  resultEl.style.display = 'none';
+
+  try {
+    // Step 1: Geocode the location with Nominatim
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ', United States')}&format=json&limit=1&addressdetails=1`
+    );
+    const geoData = await geoRes.json();
+
+    if (!geoData || geoData.length === 0) {
+      showLocResult(null, `No location found for "${query}"`);
+      return;
+    }
+
+    const { lat, lon, display_name, address } = geoData[0];
+    const latNum = parseFloat(lat);
+    const lonNum = parseFloat(lon);
+
+    // Step 2: Find county using client-side point-in-polygon (no external API needed)
+    let foundFips = null;
+
+    for (const feature of countyGeoFeatures) {
+      if (d3.geoContains(feature, [lonNum, latNum])) {
+        foundFips = feature.id;
+        break;
+      }
+    }
+
+    // Fallback: match by county name from Nominatim address details
+    if (!foundFips && address && address.county) {
+      const nominatimCounty = address.county.replace(/ County$/i, '').toLowerCase();
+      const nominatimState = (address.state || '').toLowerCase();
+      const match = counties.find(c =>
+        c.name.toLowerCase() === nominatimCounty &&
+        c.state.toLowerCase() === nominatimState
+      );
+      if (match) foundFips = match.fips;
+    }
+
+    if (!foundFips) {
+      showLocResult(null, `Could not determine county for "${query}"`);
+      return;
+    }
+
+    const county = countyMap[foundFips];
+    if (!county) {
+      showLocResult(null, `County not found on the map`);
+      return;
+    }
+
+    lastFoundFips = foundFips;
+
+    // Show result card
+    showLocResult(county, null, display_name);
+
+    // Zoom to the county on the map
+    zoomToCounty(foundFips);
+
+    // Flash the county
+    flashCounty(foundFips);
+
+  } catch (err) {
+    console.error(err);
+    showLocResult(null, 'Search failed — check your connection and try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Find County';
+  }
+}
+
+function showLocResult(county, errorMsg, locationName) {
+  const el = document.getElementById('loc-result');
+
+  if (errorMsg) {
+    el.className = 'loc-result show error';
+    el.innerHTML = `
+      <div class="loc-result-text" style="color:var(--danger)">${errorMsg}</div>
+      <button class="loc-close-btn" onclick="closeLocResult()">✕</button>
+    `;
+    return;
+  }
+
+  const shortLoc = locationName ? locationName.split(',').slice(0, 2).join(',') : '';
+  el.className = 'loc-result show';
+  el.innerHTML = `
+    <div class="loc-result-text">
+      <div class="loc-result-name">${county.name}, ${county.state}</div>
+      <div class="loc-result-detail">FIPS ${county.fips}${shortLoc ? ' · ' + shortLoc : ''}</div>
+    </div>
+    <div class="loc-result-actions">
+      <button class="loc-mark-btn" onclick="toggleFromLoc('${county.fips}')">${county.marked ? '✓ Unmark' : '+ Mark'}</button>
+      <button class="loc-close-btn" onclick="closeLocResult()">✕</button>
+    </div>
+  `;
+}
+
+function toggleFromLoc(fips) {
+  toggleCounty(fips);
+  const county = countyMap[fips];
+  if (county) showLocResult(county, null);
+}
+
+function closeLocResult() {
+  const el = document.getElementById('loc-result');
+  el.className = 'loc-result';
+  el.style.display = 'none';
+  lastFoundFips = null;
+  // Remove flash
+  d3.selectAll('.county-path.flash').classed('flash', false);
+}
+
+function zoomToCounty(fips) {
+  const countyPath = d3.select(`.county-path[data-fips="${fips}"]`);
+  if (countyPath.empty()) return;
+
+  const bounds = path.bounds(countyPath.datum());
+  const dx = bounds[1][0] - bounds[0][0];
+  const dy = bounds[1][1] - bounds[0][1];
+  const cx = (bounds[0][0] + bounds[1][0]) / 2;
+  const cy = (bounds[0][1] + bounds[1][1]) / 2;
+
+  const container = document.querySelector('.map-container');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const scale = Math.min(8, 0.7 / Math.max(dx / width, dy / height));
+  const translate = [width / 2 - scale * cx, height / 2 - scale * cy];
+
+  svg.transition().duration(750).call(
+    zoom.transform,
+    d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+  );
+}
+
+function flashCounty(fips) {
+  d3.selectAll('.county-path.flash').classed('flash', false);
+  const el = d3.select(`.county-path[data-fips="${fips}"]`);
+  el.classed('flash', true);
+  setTimeout(() => el.classed('flash', false), 2500);
+}
+
+// ── CLEAR ALL ──
+function clearAll() {
+  if (!confirm('Clear all marked counties?')) return;
+  counties.forEach(c => c.marked = false);
+  d3.selectAll('.county-path').classed('marked', false).classed('unmarked', true);
+  renderList();
+  updateStats();
+  saveToDisk();
+}
+
+// ── RESIZE ──
+window.addEventListener('resize', () => {
+  if (!us) return;
+  svg.selectAll('*').remove();
+  renderMap();
+});
+
+// Go
+init();
+</script>
+
+</body>
+</html>
