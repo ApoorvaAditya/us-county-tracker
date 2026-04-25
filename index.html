@@ -18,8 +18,9 @@
     --accent: #5eead4;
     --accent-dim: rgba(94, 234, 212, 0.12);
     --accent-mid: rgba(94, 234, 212, 0.25);
-    --marked: #5eead4;
-    --unmarked: #2a2d3a;
+    --pass: #fbbf24;
+    --pass-dim: rgba(251, 191, 36, 0.12);
+    --pass-mid: rgba(251, 191, 36, 0.25);
     --unmarked-fill: #1c1f2b;
     --hover: #3a3d50;
     --danger: #f87171;
@@ -39,7 +40,6 @@
     flex-direction: column;
   }
 
-  /* ── HEADER ── */
   header {
     display: flex;
     align-items: center;
@@ -52,297 +52,216 @@
   }
 
   .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: -0.3px;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.3px;
   }
 
   .logo-icon {
-    width: 28px; height: 28px;
-    background: var(--accent);
-    border-radius: 6px;
-    display: grid;
-    place-items: center;
-    color: var(--bg);
-    font-size: 14px;
-    font-weight: 700;
+    width: 28px; height: 28px; background: var(--accent);
+    border-radius: 6px; display: grid; place-items: center;
+    color: var(--bg); font-size: 14px; font-weight: 700;
   }
 
-  .stats-bar {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-  }
+  .stats-bar { display: flex; gap: 20px; align-items: center; }
 
   .stat {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--text-dim);
+    display: flex; align-items: baseline; gap: 5px;
+    font-size: 12px; color: var(--text-dim);
   }
 
   .stat-value {
-    font-family: 'DM Mono', monospace;
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--accent);
+    font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500;
   }
 
-  .header-actions {
-    display: flex;
-    gap: 8px;
-  }
+  .stat-value.c-accent { color: var(--accent); }
+  .stat-value.c-pass { color: var(--pass); }
+  .stat-value.c-dim { color: var(--text-dim); }
+
+  .header-actions { display: flex; gap: 8px; }
 
   .btn {
-    font-family: 'DM Sans', sans-serif;
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-family: 'DM Sans', sans-serif; padding: 8px 14px;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 6px;
   }
 
   .btn:hover { background: var(--hover); border-color: var(--text-dim); }
-  .btn-accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-  .btn-accent:hover { background: var(--accent-mid); }
   .btn-danger { color: var(--danger); border-color: rgba(248,113,113,0.3); }
   .btn-danger:hover { background: rgba(248,113,113,0.1); }
 
-  /* ── MAIN LAYOUT ── */
-  .main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
+  .main { display: flex; flex: 1; overflow: hidden; }
 
-  /* ── SIDEBAR ── */
   .sidebar {
-    width: 340px;
-    min-width: 340px;
+    width: 340px; min-width: 340px;
     border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    background: var(--surface);
+    display: flex; flex-direction: column; background: var(--surface);
   }
 
-  .search-wrap {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .search-box {
-    position: relative;
-  }
+  .search-wrap { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .search-box { position: relative; }
 
   .search-box svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-dim);
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%); color: var(--text-dim);
   }
 
   .search-box input {
-    width: 100%;
-    padding: 10px 12px 10px 38px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s;
+    width: 100%; padding: 10px 12px 10px 38px;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.15s;
   }
 
   .search-box input::placeholder { color: var(--text-dim); }
   .search-box input:focus { border-color: var(--accent); }
 
   .filter-row {
-    display: flex;
-    gap: 6px;
-    padding: 8px 16px;
-    border-bottom: 1px solid var(--border);
+    display: flex; gap: 6px; padding: 8px 16px;
+    border-bottom: 1px solid var(--border); flex-wrap: wrap;
   }
 
   .filter-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s;
   }
 
-  .filter-btn.active {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .filter-btn:hover:not(.active) { border-color: var(--text-dim); color: var(--text); }
+  .filter-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active-pass { background: var(--pass-dim); border-color: var(--pass); color: var(--pass); }
+  .filter-btn:hover:not(.active):not(.active-pass) { border-color: var(--text-dim); color: var(--text); }
 
   .county-list {
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    flex: 1; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
 
   .county-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: background 0.1s;
-    gap: 12px;
+    display: flex; align-items: center; padding: 10px 16px;
+    cursor: pointer; transition: background 0.1s; gap: 10px;
     border-bottom: 1px solid rgba(42, 45, 58, 0.5);
   }
 
   .county-item:hover { background: var(--surface2); }
 
   .county-check {
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-    border: 2px solid var(--border);
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    transition: all 0.15s;
+    width: 20px; height: 20px; border-radius: 5px;
+    border: 2px solid var(--border); display: grid;
+    place-items: center; flex-shrink: 0; transition: all 0.15s;
+    position: relative;
   }
 
-  .county-item.marked .county-check {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
+  .county-item.visited .county-check { background: var(--accent); border-color: var(--accent); }
+  .county-item.passthrough .county-check { background: var(--pass); border-color: var(--pass); }
 
-  .county-check svg { opacity: 0; transition: opacity 0.1s; }
-  .county-item.marked .county-check svg { opacity: 1; }
+  .county-check svg { position: absolute; opacity: 0; transition: opacity 0.1s; }
+  .county-item.visited .county-check .icon-check { opacity: 1; }
+  .county-item.passthrough .county-check .icon-pass { opacity: 1; }
 
   .county-info { flex: 1; min-width: 0; }
 
   .county-name {
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 14px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
-  .county-state {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 1px;
+  .county-meta {
+    font-size: 12px; color: var(--text-dim); margin-top: 1px;
+    display: flex; align-items: center; gap: 6px;
   }
+
+  .status-badge {
+    font-size: 10px; font-weight: 600; padding: 1px 6px;
+    border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .status-badge.visited { background: var(--accent-dim); color: var(--accent); }
+  .status-badge.passthrough { background: var(--pass-dim); color: var(--pass); }
 
   .county-fips {
     font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    opacity: 0.6;
+    font-size: 11px; color: var(--text-dim); opacity: 0.6;
   }
 
-  /* ── MAP AREA ── */
   .map-container {
-    flex: 1;
-    position: relative;
-    background: var(--bg);
-    overflow: hidden;
+    flex: 1; position: relative; background: var(--bg); overflow: hidden;
   }
 
-  #map-svg {
-    width: 100%;
-    height: 100%;
-  }
+  #map-svg { width: 100%; height: 100%; }
 
   .county-path {
-    stroke: var(--county-stroke);
-    stroke-width: 0.3;
-    cursor: pointer;
-    transition: fill 0.15s;
+    stroke: var(--county-stroke); stroke-width: 0.3;
+    cursor: pointer; transition: fill 0.15s;
   }
 
   .county-path.unmarked { fill: var(--unmarked-fill); }
-  .county-path.marked { fill: var(--marked); fill-opacity: 0.55; }
-  .county-path:hover { fill-opacity: 0.8; stroke: var(--text-dim); stroke-width: 0.8; }
+  .county-path.visited { fill: var(--accent); fill-opacity: 0.55; }
+  .county-path.passthrough { fill: var(--pass); fill-opacity: 0.40; }
+  .county-path:hover { fill-opacity: 0.85; stroke: var(--text-dim); stroke-width: 0.8; }
 
-  .state-border {
-    fill: none;
-    stroke: var(--state-stroke);
-    stroke-width: 0.8;
-    pointer-events: none;
-  }
+  .state-border { fill: none; stroke: var(--state-stroke); stroke-width: 0.8; pointer-events: none; }
+  .nation-border { fill: none; stroke: var(--state-stroke); stroke-width: 1.2; pointer-events: none; }
 
-  .nation-border {
-    fill: none;
-    stroke: var(--state-stroke);
-    stroke-width: 1.2;
-    pointer-events: none;
-  }
-
-  /* ── TOOLTIP ── */
   .tooltip {
-    position: absolute;
-    pointer-events: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 13px;
-    z-index: 100;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.12s;
-    max-width: 250px;
+    position: absolute; pointer-events: none;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; font-size: 13px;
+    z-index: 100; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    opacity: 0; transition: opacity 0.12s; max-width: 280px;
   }
 
   .tooltip.show { opacity: 1; }
   .tooltip-name { font-weight: 600; font-size: 14px; }
   .tooltip-state { color: var(--text-dim); margin-top: 2px; }
   .tooltip-status { margin-top: 6px; font-size: 12px; font-weight: 500; }
-  .tooltip-status.is-marked { color: var(--accent); }
-  .tooltip-status.is-unmarked { color: var(--text-dim); }
+  .tooltip-status.is-visited { color: var(--accent); }
+  .tooltip-status.is-passthrough { color: var(--pass); }
+  .tooltip-status.is-none { color: var(--text-dim); }
 
-  /* ── LOCATION SEARCH ── */
+  .zoom-controls {
+    position: absolute; bottom: 20px; right: 20px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .zoom-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-size: 18px; cursor: pointer;
+    display: grid; place-items: center; transition: all 0.15s;
+  }
+
+  .zoom-btn:hover { background: var(--hover); }
+
+  .progress-track { height: 3px; background: var(--border); flex-shrink: 0; display: flex; }
+  .progress-visited { height: 100%; background: var(--accent); transition: width 0.3s ease; }
+  .progress-pass { height: 100%; background: var(--pass); transition: width 0.3s ease; }
+
+  .loading-overlay {
+    position: absolute; inset: 0; display: grid;
+    place-items: center; background: var(--bg); z-index: 200;
+  }
+
+  .loading-text {
+    font-size: 15px; color: var(--text-dim); animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
   .loc-search {
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    display: flex;
-    gap: 6px;
-    width: 420px;
-    max-width: calc(100% - 40px);
+    position: absolute; top: 16px; left: 50%;
+    transform: translateX(-50%); z-index: 50;
+    display: flex; gap: 6px; width: 420px; max-width: calc(100% - 40px);
   }
 
   .loc-search input {
-    flex: 1;
-    padding: 10px 14px 10px 38px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s;
+    flex: 1; padding: 10px 14px 10px 38px;
+    border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.15s;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   }
 
@@ -350,26 +269,16 @@
   .loc-search input:focus { border-color: var(--accent); }
 
   .loc-search .loc-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-dim);
-    pointer-events: none;
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%); color: var(--text-dim); pointer-events: none;
   }
 
   .loc-search-btn {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--accent);
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
+    padding: 10px 16px; border-radius: 10px;
+    border: 1px solid var(--accent); background: var(--accent-dim);
+    color: var(--accent); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: all 0.15s;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   }
 
@@ -377,59 +286,43 @@
   .loc-search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .loc-result {
-    position: absolute;
-    top: 58px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    display: none;
-    max-width: 420px;
-    width: max-content;
-    animation: fadeSlideIn 0.2s ease;
+    position: absolute; top: 58px; left: 50%;
+    transform: translateX(-50%); z-index: 50;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; font-size: 13px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5); display: none;
+    max-width: 500px; width: max-content; animation: fadeSlideIn 0.2s ease;
   }
 
   .loc-result.show { display: flex; align-items: center; gap: 12px; }
   .loc-result.error { border-color: rgba(248,113,113,0.4); }
-
   .loc-result-text { flex: 1; }
   .loc-result-name { font-weight: 600; }
   .loc-result-detail { color: var(--text-dim); margin-top: 2px; font-size: 12px; }
+  .loc-result-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-  .loc-result-actions { display: flex; gap: 6px; }
-
-  .loc-mark-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--accent);
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
+  .loc-btn-v {
+    padding: 6px 10px; border-radius: 6px;
+    border: 1px solid var(--accent); background: var(--accent-dim);
+    color: var(--accent); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s;
   }
+  .loc-btn-v:hover { background: var(--accent-mid); }
 
-  .loc-mark-btn:hover { background: var(--accent-mid); }
+  .loc-btn-p {
+    padding: 6px 10px; border-radius: 6px;
+    border: 1px solid var(--pass); background: var(--pass-dim);
+    color: var(--pass); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .loc-btn-p:hover { background: var(--pass-mid); }
 
   .loc-close-btn {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
+    padding: 6px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+    font-size: 12px; cursor: pointer; transition: all 0.15s;
   }
-
   .loc-close-btn:hover { background: var(--surface2); }
 
   @keyframes fadeSlideIn {
@@ -439,92 +332,51 @@
 
   @keyframes countyFlash {
     0%, 100% { fill-opacity: 0.55; }
-    25% { fill-opacity: 1; }
-    50% { fill-opacity: 0.3; }
-    75% { fill-opacity: 1; }
+    25% { fill-opacity: 1; } 50% { fill-opacity: 0.3; } 75% { fill-opacity: 1; }
   }
 
   .county-path.flash {
     animation: countyFlash 1s ease 2;
-    stroke: var(--accent) !important;
-    stroke-width: 2 !important;
+    stroke: var(--accent) !important; stroke-width: 2 !important;
   }
 
-  /* ── ZOOM CONTROLS ── */
-  .zoom-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .map-legend {
+    position: absolute; bottom: 20px; left: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 12px; display: flex; flex-direction: column; gap: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   }
 
-  .zoom-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 18px;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: all 0.15s;
-  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
-  .zoom-btn:hover { background: var(--hover); }
-
-  /* ── PROGRESS BAR ── */
-  .progress-track {
-    height: 3px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.3s ease;
-  }
-
-  /* ── LOADING ── */
-  .loading-overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: var(--bg);
-    z-index: 200;
-  }
-
-  .loading-text {
-    font-size: 15px;
-    color: var(--text-dim);
-    animation: pulse 1.5s ease infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* Hidden file input */
   #csv-import { display: none; }
 
-  /* ── SCROLLBAR ── */
   .county-list::-webkit-scrollbar { width: 6px; }
   .county-list::-webkit-scrollbar-track { background: transparent; }
   .county-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
   .list-count {
-    padding: 8px 16px;
-    font-size: 12px;
-    color: var(--text-dim);
-    border-bottom: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
+    padding: 8px 16px; font-size: 12px; color: var(--text-dim);
+    border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace;
   }
+
+  .ctx-menu {
+    position: fixed; z-index: 200;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 6px; min-width: 190px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5); display: none;
+  }
+  .ctx-menu.show { display: block; }
+  .ctx-item {
+    padding: 8px 12px; border-radius: 6px; font-size: 13px;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: background 0.1s; color: var(--text);
+  }
+  .ctx-item:hover { background: var(--surface2); }
+  .ctx-item .ctx-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .ctx-sep { height: 1px; background: var(--border); margin: 4px 0; }
 </style>
 </head>
 <body>
@@ -535,35 +387,28 @@
     US Counties Explorer
   </div>
   <div class="stats-bar">
-    <div class="stat">
-      <span class="stat-value" id="marked-count">0</span>
-      <span>marked</span>
-    </div>
-    <div class="stat">
-      <span class="stat-value" id="total-count">0</span>
-      <span>total</span>
-    </div>
-    <div class="stat">
-      <span class="stat-value" id="pct-count">0%</span>
-      <span>complete</span>
-    </div>
+    <div class="stat"><span class="stat-value c-accent" id="visited-count">0</span><span>visited</span></div>
+    <div class="stat"><span class="stat-value c-pass" id="pass-count">0</span><span>passed</span></div>
+    <div class="stat"><span class="stat-value c-dim" id="total-count">0</span><span>total</span></div>
+    <div class="stat"><span class="stat-value c-accent" id="pct-count">0%</span><span>coverage</span></div>
   </div>
   <div class="header-actions">
     <button class="btn" onclick="exportCSV()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export CSV
+      Export
     </button>
     <button class="btn" onclick="document.getElementById('csv-import').click()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Import CSV
+      Import
     </button>
     <input type="file" id="csv-import" accept=".csv" onchange="importCSV(event)">
-    <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-danger" onclick="clearAll()">Clear</button>
   </div>
 </header>
 
 <div class="progress-track">
-  <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+  <div class="progress-visited" id="progress-visited" style="width:0%"></div>
+  <div class="progress-pass" id="progress-pass" style="width:0%"></div>
 </div>
 
 <div class="main">
@@ -571,22 +416,22 @@
     <div class="search-wrap">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="search-input" placeholder="Search counties or states…" oninput="filterList()">
+        <input type="text" id="search-input" placeholder="Search counties or states…" oninput="renderList()">
       </div>
     </div>
     <div class="filter-row">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
-      <button class="filter-btn" data-filter="marked" onclick="setFilter('marked', this)">Marked</button>
-      <button class="filter-btn" data-filter="unmarked" onclick="setFilter('unmarked', this)">Unmarked</button>
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-filter="visited" onclick="setFilter('visited',this)">Visited</button>
+      <button class="filter-btn" data-filter="passthrough" onclick="setFilter('passthrough',this)">Pass-through</button>
+      <button class="filter-btn" data-filter="any" onclick="setFilter('any',this)">Any marked</button>
+      <button class="filter-btn" data-filter="unmarked" onclick="setFilter('unmarked',this)">Unmarked</button>
     </div>
     <div class="list-count" id="list-count">Loading…</div>
     <div class="county-list" id="county-list"></div>
   </div>
 
   <div class="map-container">
-    <div class="loading-overlay" id="loading">
-      <div class="loading-text">Loading county data…</div>
-    </div>
+    <div class="loading-overlay" id="loading"><div class="loading-text">Loading county data…</div></div>
     <div class="loc-search">
       <svg class="loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
       <input type="text" id="loc-input" placeholder="Search by city, address, or place…" onkeydown="if(event.key==='Enter')searchLocation()">
@@ -595,6 +440,11 @@
     <div class="loc-result" id="loc-result"></div>
     <svg id="map-svg"></svg>
     <div class="tooltip" id="tooltip"></div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent);opacity:0.7"></div>Visited</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pass);opacity:0.6"></div>Pass-through</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--unmarked-fill)"></div>Unmarked</div>
+    </div>
     <div class="zoom-controls">
       <button class="zoom-btn" onclick="zoomIn()">+</button>
       <button class="zoom-btn" onclick="zoomOut()">−</button>
@@ -603,17 +453,21 @@
   </div>
 </div>
 
-<script>
-// ── STATE ──
-let counties = [];       // {id, name, state, fips, marked}
-let countyMap = {};       // fips -> county
-let countyGeoFeatures = []; // GeoJSON features for point-in-polygon
-let currentFilter = 'all';
-let us = null;
-let svg, g, path, projection, zoom;
-const STORAGE_KEY = 'us-counties-marked';
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxSet('visited')"><div class="ctx-dot" style="background:var(--accent)"></div>Mark Visited</div>
+  <div class="ctx-item" onclick="ctxSet('passthrough')"><div class="ctx-dot" style="background:var(--pass)"></div>Mark Pass-through</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxSet('none')"><div class="ctx-dot" style="background:var(--border)"></div>Clear</div>
+</div>
 
-// ── FIPS to State Name ──
+<script>
+// ══ STATE ══
+let counties = [], countyMap = {}, countyGeoFeatures = [];
+let currentFilter = 'all', ctxFips = null;
+let us = null, svg, g, path, projection, zoom;
+
+const STORAGE_KEY = 'us-counties-v2';
+
 const stateNames = {
   "01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas","06":"California",
   "08":"Colorado","09":"Connecticut","10":"Delaware","11":"District of Columbia",
@@ -630,473 +484,396 @@ const stateNames = {
   "72":"Puerto Rico","78":"U.S. Virgin Islands"
 };
 
-// ── INIT ──
+// ══ LOCALSTORAGE ══
+function saveState() {
+  const entries = [];
+  counties.forEach(c => {
+    if (c.status === 'visited') entries.push(c.fips + ':v');
+    else if (c.status === 'passthrough') entries.push(c.fips + ':p');
+  });
+  try { localStorage.setItem(STORAGE_KEY, entries.join(',')); } catch(e) {}
+}
+
+function loadState() {
+  let payload = '';
+
+  try { payload = localStorage.getItem(STORAGE_KEY) || ''; } catch(e) {}
+
+  // Migrate old format (boolean marked list) if present
+  if (!payload) {
+    try {
+      const old = localStorage.getItem('us-counties-marked');
+      if (old) {
+        const ids = JSON.parse(old);
+        payload = ids.map(id => id + ':v').join(',');
+        localStorage.removeItem('us-counties-marked');
+      }
+    } catch(e) {}
+  }
+
+  if (!payload) return;
+  payload.split(',').forEach(entry => {
+    const [fips, s] = entry.split(':');
+    if (fips && countyMap[fips]) {
+      countyMap[fips].status = (s === 'p') ? 'passthrough' : 'visited';
+    }
+  });
+}
+
+// ══ INIT ══
 async function init() {
   try {
     us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json");
   } catch(e) {
-    document.getElementById('loading').innerHTML = '<div class="loading-text" style="color:var(--danger)">Failed to load map data. Please refresh.</div>';
+    document.getElementById('loading').innerHTML = '<div class="loading-text" style="color:var(--danger)">Failed to load map. Refresh the page.</div>';
     return;
   }
 
-  // Build county list from topojson
-  const countyFeatures = topojson.feature(us, us.objects.counties).features;
-  countyGeoFeatures = countyFeatures;
-  counties = countyFeatures.map(f => {
-    const fips = f.id;
-    const stateFips = fips.substring(0, 2);
-    const name = f.properties.name || `County ${fips}`;
-    return {
-      id: fips,
-      fips: fips,
-      name: name,
-      state: stateNames[stateFips] || `State ${stateFips}`,
-      stateFips: stateFips,
-      marked: false
-    };
-  }).filter(c => c.state !== undefined);
+  const feats = topojson.feature(us, us.objects.counties).features;
+  countyGeoFeatures = feats;
+
+  counties = feats.map(f => ({
+    fips: f.id,
+    name: f.properties.name || `County ${f.id}`,
+    state: stateNames[f.id.substring(0, 2)] || '',
+    stateFips: f.id.substring(0, 2),
+    status: 'none'
+  })).filter(c => c.state);
 
   counties.sort((a, b) => a.name.localeCompare(b.name) || a.state.localeCompare(b.state));
-
   counties.forEach(c => { countyMap[c.fips] = c; });
 
-  // Load saved
-  loadSaved();
-
-  // Render
+  loadState();
   renderMap();
   renderList();
   updateStats();
-
   document.getElementById('loading').style.display = 'none';
 }
 
-function loadSaved() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const markedIds = JSON.parse(saved);
-      markedIds.forEach(id => {
-        if (countyMap[id]) countyMap[id].marked = true;
-      });
-    }
-  } catch(e) {}
+// ══ MAP ══
+function sClass(fips) {
+  const c = countyMap[fips];
+  return c ? (c.status === 'visited' ? 'visited' : c.status === 'passthrough' ? 'passthrough' : 'unmarked') : 'unmarked';
 }
 
-function saveToDisk() {
-  const markedIds = counties.filter(c => c.marked).map(c => c.fips);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(markedIds));
-}
-
-// ── MAP ──
 function renderMap() {
-  const container = document.querySelector('.map-container');
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-
-  svg = d3.select('#map-svg')
-    .attr('width', width)
-    .attr('height', height);
-
+  const el = document.querySelector('.map-container');
+  const w = el.clientWidth, h = el.clientHeight;
+  svg = d3.select('#map-svg').attr('width', w).attr('height', h);
   projection = d3.geoAlbersUsa()
-    .fitSize([width - 40, height - 40], topojson.feature(us, us.objects.nation))
-    .translate([width / 2, height / 2]);
-
+    .fitSize([w - 40, h - 40], topojson.feature(us, us.objects.nation))
+    .translate([w / 2, h / 2]);
   path = d3.geoPath().projection(projection);
-
   g = svg.append('g');
 
-  // Counties
   g.selectAll('.county-path')
     .data(topojson.feature(us, us.objects.counties).features)
     .enter().append('path')
-    .attr('class', d => `county-path ${countyMap[d.id]?.marked ? 'marked' : 'unmarked'}`)
+    .attr('class', d => `county-path ${sClass(d.id)}`)
     .attr('d', path)
     .attr('data-fips', d => d.id)
-    .on('click', function(event, d) {
-      toggleCounty(d.id);
-    })
-    .on('mouseenter', function(event, d) {
-      showTooltip(event, d.id);
-    })
-    .on('mousemove', function(event) {
-      moveTooltip(event);
-    })
-    .on('mouseleave', hideTooltip);
+    .on('click', (ev, d) => cycleStatus(d.id))
+    .on('contextmenu', (ev, d) => { ev.preventDefault(); showCtx(ev, d.id); })
+    .on('mouseenter', (ev, d) => showTip(ev, d.id))
+    .on('mousemove', moveTip)
+    .on('mouseleave', hideTip);
 
-  // State borders
-  g.append('path')
-    .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
-    .attr('class', 'state-border')
-    .attr('d', path);
+  g.append('path').datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+    .attr('class', 'state-border').attr('d', path);
+  g.append('path').datum(topojson.mesh(us, us.objects.nation))
+    .attr('class', 'nation-border').attr('d', path);
 
-  // Nation border
-  g.append('path')
-    .datum(topojson.mesh(us, us.objects.nation))
-    .attr('class', 'nation-border')
-    .attr('d', path);
-
-  // Zoom
-  zoom = d3.zoom()
-    .scaleExtent([1, 20])
-    .on('zoom', (event) => {
-      g.attr('transform', event.transform);
-    });
-
+  zoom = d3.zoom().scaleExtent([1, 20]).on('zoom', ev => g.attr('transform', ev.transform));
   svg.call(zoom);
+}
+
+function updateOnMap(fips) {
+  d3.select(`.county-path[data-fips="${fips}"]`).attr('class', `county-path ${sClass(fips)}`);
 }
 
 function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.5); }
 function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.67); }
 function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); }
 
-// ── TOOLTIP ──
-function showTooltip(event, fips) {
+// ══ STATUS ══
+// Left-click cycles: none → visited → passthrough → none
+function cycleStatus(fips) {
   const c = countyMap[fips];
   if (!c) return;
-  const tip = document.getElementById('tooltip');
-  tip.innerHTML = `
-    <div class="tooltip-name">${c.name}</div>
-    <div class="tooltip-state">${c.state} · FIPS ${c.fips}</div>
-    <div class="tooltip-status ${c.marked ? 'is-marked' : 'is-unmarked'}">
-      ${c.marked ? '✓ Marked' : '○ Not marked'} · Click to toggle
-    </div>
-  `;
-  tip.classList.add('show');
-  moveTooltip(event);
-}
-
-function moveTooltip(event) {
-  const tip = document.getElementById('tooltip');
-  const rect = document.querySelector('.map-container').getBoundingClientRect();
-  let x = event.clientX - rect.left + 14;
-  let y = event.clientY - rect.top - 10;
-  if (x + 200 > rect.width) x = x - 230;
-  if (y + 80 > rect.height) y = y - 80;
-  tip.style.left = x + 'px';
-  tip.style.top = y + 'px';
-}
-
-function hideTooltip() {
-  document.getElementById('tooltip').classList.remove('show');
-}
-
-// ── TOGGLE ──
-function toggleCounty(fips) {
-  const c = countyMap[fips];
-  if (!c) return;
-  c.marked = !c.marked;
-
-  // Update map
-  d3.select(`.county-path[data-fips="${fips}"]`)
-    .classed('marked', c.marked)
-    .classed('unmarked', !c.marked);
-
-  // Update list item if visible
-  const el = document.querySelector(`.county-item[data-fips="${fips}"]`);
-  if (el) {
-    el.classList.toggle('marked', c.marked);
-    // If filter is active, may need to hide/show
-    if (currentFilter === 'marked' && !c.marked) el.style.display = 'none';
-    if (currentFilter === 'unmarked' && c.marked) el.style.display = 'none';
-  }
-
-  saveToDisk();
+  c.status = c.status === 'none' ? 'visited' : c.status === 'visited' ? 'passthrough' : 'none';
+  updateOnMap(fips);
+  renderList();
+  saveState();
   updateStats();
 }
 
-// ── LIST ──
+function setStatus(fips, status) {
+  const c = countyMap[fips];
+  if (!c) return;
+  c.status = status;
+  updateOnMap(fips);
+  renderList();
+  saveState();
+  updateStats();
+}
+
+// ══ CONTEXT MENU ══
+function showCtx(ev, fips) {
+  ctxFips = fips;
+  const m = document.getElementById('ctx-menu');
+  m.style.left = ev.clientX + 'px';
+  m.style.top = ev.clientY + 'px';
+  m.classList.add('show');
+}
+function ctxSet(s) {
+  if (ctxFips) setStatus(ctxFips, s);
+  document.getElementById('ctx-menu').classList.remove('show');
+  ctxFips = null;
+}
+document.addEventListener('click', () => document.getElementById('ctx-menu').classList.remove('show'));
+
+// ══ TOOLTIP ══
+const sLabels = { visited: '✓ Visited', passthrough: '⇢ Pass-through', none: '○ Unmarked' };
+const sTipCls = { visited: 'is-visited', passthrough: 'is-passthrough', none: 'is-none' };
+
+function showTip(ev, fips) {
+  const c = countyMap[fips]; if (!c) return;
+  const tip = document.getElementById('tooltip');
+  tip.innerHTML = `<div class="tooltip-name">${c.name}</div>
+    <div class="tooltip-state">${c.state} · FIPS ${c.fips}</div>
+    <div class="tooltip-status ${sTipCls[c.status]}">${sLabels[c.status]} · Click to cycle · Right-click for menu</div>`;
+  tip.classList.add('show');
+  moveTip(ev);
+}
+function moveTip(ev) {
+  const tip = document.getElementById('tooltip');
+  const r = document.querySelector('.map-container').getBoundingClientRect();
+  let x = ev.clientX - r.left + 14, y = ev.clientY - r.top - 10;
+  if (x + 220 > r.width) x -= 240;
+  if (y + 80 > r.height) y -= 80;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function hideTip() { document.getElementById('tooltip').classList.remove('show'); }
+
+// ══ LIST ══
 function renderList() {
   const list = document.getElementById('county-list');
-  const search = document.getElementById('search-input').value.toLowerCase();
+  const q = document.getElementById('search-input').value.toLowerCase();
 
-  let filtered = counties;
-  if (currentFilter === 'marked') filtered = filtered.filter(c => c.marked);
-  if (currentFilter === 'unmarked') filtered = filtered.filter(c => !c.marked);
-  if (search) {
-    filtered = filtered.filter(c =>
-      c.name.toLowerCase().includes(search) ||
-      c.state.toLowerCase().includes(search) ||
-      c.fips.includes(search)
-    );
-  }
+  let f = counties;
+  if (currentFilter === 'visited') f = f.filter(c => c.status === 'visited');
+  else if (currentFilter === 'passthrough') f = f.filter(c => c.status === 'passthrough');
+  else if (currentFilter === 'any') f = f.filter(c => c.status !== 'none');
+  else if (currentFilter === 'unmarked') f = f.filter(c => c.status === 'none');
 
-  document.getElementById('list-count').textContent = `${filtered.length} counties shown`;
+  if (q) f = f.filter(c => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q) || c.fips.includes(q));
 
-  // Virtual-ish rendering: cap at 500 for perf, show message if more
-  const toShow = filtered.slice(0, 500);
+  document.getElementById('list-count').textContent = `${f.length} counties shown`;
+  const show = f.slice(0, 500);
 
-  list.innerHTML = toShow.map(c => `
-    <div class="county-item ${c.marked ? 'marked' : ''}" data-fips="${c.fips}" onclick="toggleCounty('${c.fips}')">
+  list.innerHTML = show.map(c => {
+    const cls = c.status !== 'none' ? c.status : '';
+    const badge = c.status === 'visited' ? '<span class="status-badge visited">visited</span>'
+      : c.status === 'passthrough' ? '<span class="status-badge passthrough">pass</span>' : '';
+    return `<div class="county-item ${cls}" data-fips="${c.fips}" onclick="cycleStatus('${c.fips}')">
       <div class="county-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f1117" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg class="icon-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f1117" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg class="icon-pass" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f1117" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg>
       </div>
       <div class="county-info">
         <div class="county-name">${c.name}</div>
-        <div class="county-state">${c.state}</div>
+        <div class="county-meta">${c.state} ${badge}</div>
       </div>
       <div class="county-fips">${c.fips}</div>
-    </div>
-  `).join('') + (filtered.length > 500 ? `<div style="padding:16px;text-align:center;color:var(--text-dim);font-size:13px">${filtered.length - 500} more — refine your search</div>` : '');
+    </div>`;
+  }).join('') + (f.length > 500 ? `<div style="padding:16px;text-align:center;color:var(--text-dim);font-size:13px">${f.length-500} more — refine search</div>` : '');
 }
 
-function filterList() { renderList(); }
-
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function setFilter(fl, btn) {
+  currentFilter = fl;
+  document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active','active-pass'); });
+  btn.classList.add(fl === 'passthrough' ? 'active-pass' : 'active');
   renderList();
 }
 
-// ── STATS ──
+// ══ STATS ══
 function updateStats() {
-  const total = counties.length;
-  const marked = counties.filter(c => c.marked).length;
-  const pct = total ? Math.round(marked / total * 100) : 0;
-  document.getElementById('marked-count').textContent = marked;
-  document.getElementById('total-count').textContent = total;
+  const t = counties.length;
+  const v = counties.filter(c => c.status === 'visited').length;
+  const p = counties.filter(c => c.status === 'passthrough').length;
+  const pct = t ? Math.round((v + p) / t * 100) : 0;
+  document.getElementById('visited-count').textContent = v;
+  document.getElementById('pass-count').textContent = p;
+  document.getElementById('total-count').textContent = t;
   document.getElementById('pct-count').textContent = pct + '%';
-  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-visited').style.width = (t ? v/t*100 : 0) + '%';
+  document.getElementById('progress-pass').style.width = (t ? p/t*100 : 0) + '%';
 }
 
-// ── CSV EXPORT ──
+// ══ CSV EXPORT ══
 function exportCSV() {
-  const marked = counties.filter(c => c.marked);
-  if (marked.length === 0) {
-    alert('No counties marked yet!');
-    return;
-  }
-  const rows = [['FIPS', 'County', 'State']];
-  marked.forEach(c => {
-    rows.push([c.fips, `"${c.name}"`, `"${c.state}"`]);
-  });
-  const csv = rows.map(r => r.join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
+  const tagged = counties.filter(c => c.status !== 'none');
+  if (!tagged.length) { alert('No counties marked yet!'); return; }
+  const rows = [['FIPS','County','State','Status']];
+  tagged.forEach(c => rows.push([c.fips, `"${c.name}"`, `"${c.state}"`, c.status]));
+  const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `marked-counties-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url;
+  a.download = `counties-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
 }
 
-// ── CSV IMPORT ──
+// ══ CSV IMPORT (backward compatible) ══
 function importCSV(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
-    const text = e.target.result;
-    const lines = text.trim().split('\n');
-    let importedCount = 0;
+    const lines = e.target.result.trim().split('\n');
+    let iV = 0, iP = 0;
 
-    // Skip header if present
-    const start = lines[0].toLowerCase().includes('fips') ? 1 : 0;
+    const hdr = lines[0].toLowerCase();
+    const hasHdr = hdr.includes('fips');
+    const start = hasHdr ? 1 : 0;
+
+    // Find Status column index (backward compat: may not exist)
+    let statusCol = -1;
+    if (hasHdr) {
+      const cols = hdr.split(',').map(c => c.trim().replace(/"/g, ''));
+      statusCol = cols.indexOf('status');
+    }
 
     for (let i = start; i < lines.length; i++) {
       const parts = lines[i].split(',');
       const fips = parts[0]?.trim().replace(/"/g, '');
-      if (fips && countyMap[fips]) {
-        if (!countyMap[fips].marked) {
-          countyMap[fips].marked = true;
-          importedCount++;
-        }
+      if (!fips || !countyMap[fips]) continue;
+
+      // Default to 'visited' if no Status column (old format)
+      let status = 'visited';
+      if (statusCol >= 0 && parts[statusCol]) {
+        const raw = parts[statusCol].trim().replace(/"/g, '').toLowerCase();
+        status = (raw === 'passthrough' || raw === 'pass-through' || raw === 'pass') ? 'passthrough' : 'visited';
+      }
+
+      if (countyMap[fips].status === 'none') {
+        countyMap[fips].status = status;
+        if (status === 'visited') iV++; else iP++;
       }
     }
 
-    // Update everything
     d3.selectAll('.county-path').each(function(d) {
-      const el = d3.select(this);
-      const c = countyMap[d.id];
-      if (c) {
-        el.classed('marked', c.marked).classed('unmarked', !c.marked);
-      }
+      d3.select(this).attr('class', `county-path ${sClass(d.id)}`);
     });
-
-    renderList();
-    updateStats();
-    saveToDisk();
-    alert(`Imported ${importedCount} new counties.`);
+    renderList(); updateStats(); saveState();
+    alert(`Imported ${iV} visited + ${iP} pass-through counties.`);
   };
   reader.readAsText(file);
   event.target.value = '';
 }
 
-// ── LOCATION SEARCH ──
+// ══ LOCATION SEARCH ══
 let lastFoundFips = null;
 
 async function searchLocation() {
   const input = document.getElementById('loc-input');
   const btn = document.getElementById('loc-btn');
-  const resultEl = document.getElementById('loc-result');
-  const query = input.value.trim();
-  if (!query) return;
+  const resEl = document.getElementById('loc-result');
+  const q = input.value.trim(); if (!q) return;
 
-  btn.disabled = true;
-  btn.textContent = 'Searching…';
-  resultEl.className = 'loc-result';
-  resultEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Searching…';
+  resEl.className = 'loc-result'; resEl.style.display = 'none';
 
   try {
-    // Step 1: Geocode the location with Nominatim
-    const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ', United States')}&format=json&limit=1&addressdetails=1`
-    );
-    const geoData = await geoRes.json();
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', United States')}&format=json&limit=1&addressdetails=1`);
+    const data = await r.json();
+    if (!data || !data.length) { showLoc(null, `No location found for "${q}"`); return; }
 
-    if (!geoData || geoData.length === 0) {
-      showLocResult(null, `No location found for "${query}"`);
-      return;
+    const { lat, lon, display_name, address } = data[0];
+    const la = parseFloat(lat), lo = parseFloat(lon);
+
+    let fips = null;
+    for (const feat of countyGeoFeatures) { if (d3.geoContains(feat, [lo, la])) { fips = feat.id; break; } }
+    if (!fips && address?.county) {
+      const nc = address.county.replace(/ County$/i,'').toLowerCase();
+      const ns = (address.state||'').toLowerCase();
+      const m = counties.find(c => c.name.toLowerCase()===nc && c.state.toLowerCase()===ns);
+      if (m) fips = m.fips;
     }
+    if (!fips) { showLoc(null, `Could not determine county for "${q}"`); return; }
 
-    const { lat, lon, display_name, address } = geoData[0];
-    const latNum = parseFloat(lat);
-    const lonNum = parseFloat(lon);
+    const county = countyMap[fips];
+    if (!county) { showLoc(null, 'County not found on map'); return; }
 
-    // Step 2: Find county using client-side point-in-polygon (no external API needed)
-    let foundFips = null;
-
-    for (const feature of countyGeoFeatures) {
-      if (d3.geoContains(feature, [lonNum, latNum])) {
-        foundFips = feature.id;
-        break;
-      }
-    }
-
-    // Fallback: match by county name from Nominatim address details
-    if (!foundFips && address && address.county) {
-      const nominatimCounty = address.county.replace(/ County$/i, '').toLowerCase();
-      const nominatimState = (address.state || '').toLowerCase();
-      const match = counties.find(c =>
-        c.name.toLowerCase() === nominatimCounty &&
-        c.state.toLowerCase() === nominatimState
-      );
-      if (match) foundFips = match.fips;
-    }
-
-    if (!foundFips) {
-      showLocResult(null, `Could not determine county for "${query}"`);
-      return;
-    }
-
-    const county = countyMap[foundFips];
-    if (!county) {
-      showLocResult(null, `County not found on the map`);
-      return;
-    }
-
-    lastFoundFips = foundFips;
-
-    // Show result card
-    showLocResult(county, null, display_name);
-
-    // Zoom to the county on the map
-    zoomToCounty(foundFips);
-
-    // Flash the county
-    flashCounty(foundFips);
-
-  } catch (err) {
+    lastFoundFips = fips;
+    showLoc(county, null, display_name);
+    zoomToCounty(fips);
+    flashCounty(fips);
+  } catch(err) {
     console.error(err);
-    showLocResult(null, 'Search failed — check your connection and try again.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Find County';
-  }
+    showLoc(null, 'Search failed — check connection and try again.');
+  } finally { btn.disabled = false; btn.textContent = 'Find County'; }
 }
 
-function showLocResult(county, errorMsg, locationName) {
+function showLoc(county, err, locName) {
   const el = document.getElementById('loc-result');
-
-  if (errorMsg) {
+  if (err) {
     el.className = 'loc-result show error';
-    el.innerHTML = `
-      <div class="loc-result-text" style="color:var(--danger)">${errorMsg}</div>
-      <button class="loc-close-btn" onclick="closeLocResult()">✕</button>
-    `;
+    el.innerHTML = `<div class="loc-result-text" style="color:var(--danger)">${err}</div><button class="loc-close-btn" onclick="closeLoc()">✕</button>`;
     return;
   }
-
-  const shortLoc = locationName ? locationName.split(',').slice(0, 2).join(',') : '';
+  const short = locName ? locName.split(',').slice(0,2).join(',') : '';
+  const sLabel = county.status === 'visited' ? ' · Visited' : county.status === 'passthrough' ? ' · Pass-through' : '';
   el.className = 'loc-result show';
-  el.innerHTML = `
-    <div class="loc-result-text">
-      <div class="loc-result-name">${county.name}, ${county.state}</div>
-      <div class="loc-result-detail">FIPS ${county.fips}${shortLoc ? ' · ' + shortLoc : ''}</div>
+  el.innerHTML = `<div class="loc-result-text">
+      <div class="loc-result-name">${county.name}, ${county.state}${sLabel}</div>
+      <div class="loc-result-detail">FIPS ${county.fips}${short ? ' · '+short : ''}</div>
     </div>
     <div class="loc-result-actions">
-      <button class="loc-mark-btn" onclick="toggleFromLoc('${county.fips}')">${county.marked ? '✓ Unmark' : '+ Mark'}</button>
-      <button class="loc-close-btn" onclick="closeLocResult()">✕</button>
-    </div>
-  `;
+      <button class="loc-btn-v" onclick="locMark('${county.fips}','visited')">Visited</button>
+      <button class="loc-btn-p" onclick="locMark('${county.fips}','passthrough')">Pass-through</button>
+      <button class="loc-close-btn" onclick="locMark('${county.fips}','none')">Clear</button>
+      <button class="loc-close-btn" onclick="closeLoc()">✕</button>
+    </div>`;
 }
 
-function toggleFromLoc(fips) {
-  toggleCounty(fips);
-  const county = countyMap[fips];
-  if (county) showLocResult(county, null);
-}
+function locMark(fips, s) { setStatus(fips, s); showLoc(countyMap[fips], null); }
 
-function closeLocResult() {
+function closeLoc() {
   const el = document.getElementById('loc-result');
-  el.className = 'loc-result';
-  el.style.display = 'none';
+  el.className = 'loc-result'; el.style.display = 'none';
   lastFoundFips = null;
-  // Remove flash
   d3.selectAll('.county-path.flash').classed('flash', false);
 }
 
 function zoomToCounty(fips) {
-  const countyPath = d3.select(`.county-path[data-fips="${fips}"]`);
-  if (countyPath.empty()) return;
-
-  const bounds = path.bounds(countyPath.datum());
-  const dx = bounds[1][0] - bounds[0][0];
-  const dy = bounds[1][1] - bounds[0][1];
-  const cx = (bounds[0][0] + bounds[1][0]) / 2;
-  const cy = (bounds[0][1] + bounds[1][1]) / 2;
-
-  const container = document.querySelector('.map-container');
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-
-  const scale = Math.min(8, 0.7 / Math.max(dx / width, dy / height));
-  const translate = [width / 2 - scale * cx, height / 2 - scale * cy];
-
-  svg.transition().duration(750).call(
-    zoom.transform,
-    d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
-  );
+  const cp = d3.select(`.county-path[data-fips="${fips}"]`);
+  if (cp.empty()) return;
+  const b = path.bounds(cp.datum());
+  const dx = b[1][0]-b[0][0], dy = b[1][1]-b[0][1];
+  const cx = (b[0][0]+b[1][0])/2, cy = (b[0][1]+b[1][1])/2;
+  const el = document.querySelector('.map-container');
+  const w = el.clientWidth, h = el.clientHeight;
+  const sc = Math.min(8, 0.7/Math.max(dx/w, dy/h));
+  svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(w/2-sc*cx, h/2-sc*cy).scale(sc));
 }
 
 function flashCounty(fips) {
   d3.selectAll('.county-path.flash').classed('flash', false);
-  const el = d3.select(`.county-path[data-fips="${fips}"]`);
-  el.classed('flash', true);
-  setTimeout(() => el.classed('flash', false), 2500);
+  d3.select(`.county-path[data-fips="${fips}"]`).classed('flash', true);
+  setTimeout(() => d3.select(`.county-path[data-fips="${fips}"]`).classed('flash', false), 2500);
 }
 
-// ── CLEAR ALL ──
+// ══ CLEAR ══
 function clearAll() {
   if (!confirm('Clear all marked counties?')) return;
-  counties.forEach(c => c.marked = false);
-  d3.selectAll('.county-path').classed('marked', false).classed('unmarked', true);
-  renderList();
-  updateStats();
-  saveToDisk();
+  counties.forEach(c => c.status = 'none');
+  d3.selectAll('.county-path').attr('class', 'county-path unmarked');
+  renderList(); updateStats(); saveState();
 }
 
-// ── RESIZE ──
-window.addEventListener('resize', () => {
-  if (!us) return;
-  svg.selectAll('*').remove();
-  renderMap();
-});
+// ══ RESIZE ══
+window.addEventListener('resize', () => { if (!us) return; svg.selectAll('*').remove(); renderMap(); });
 
-// Go
 init();
 </script>
-
 </body>
 </html>
